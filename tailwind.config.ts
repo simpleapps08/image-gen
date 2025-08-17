@@ -26,7 +26,16 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					hover: 'hsl(var(--primary-hover))'
+				},
+				ai: {
+					'gradient-start': 'hsl(var(--ai-gradient-start))',
+					'gradient-end': 'hsl(var(--ai-gradient-end))',
+					surface: 'hsl(var(--ai-surface))',
+					'surface-hover': 'hsl(var(--ai-surface-hover))',
+					'text-light': 'hsl(var(--ai-text-light))',
+					shadow: 'hsl(var(--ai-shadow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
