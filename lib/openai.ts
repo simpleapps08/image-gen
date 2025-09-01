@@ -12,7 +12,7 @@ export interface GenerateImageResponse {
 
 export async function generateImage(options: GenerateImageOptions): Promise<GenerateImageResponse> {
   try {
-    const response = await fetch('/supabase/functions/v1/generate-image', {
+    const response = await fetch('/api/generate-image', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -21,13 +21,17 @@ export async function generateImage(options: GenerateImageOptions): Promise<Gene
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `API request failed: ${response.status}`);
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
     console.error('Image generation failed:', error);
+    if (error instanceof Error) {
+      throw error;
+    }
     throw new Error('Failed to generate image. Please try again.');
   }
 }

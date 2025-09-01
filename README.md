@@ -32,7 +32,13 @@ cd <YOUR_PROJECT_NAME>
 # Step 3: Install the necessary dependencies.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Set up your environment variables.
+# Copy the example environment file and add your OpenAI API key
+cp .env.example .env
+# Edit .env and add your OpenAI API key:
+# OPENAI_API_KEY=your-openai-api-key-here
+
+# Step 5: Start the Next.js development server (includes both frontend and API)
 npm run dev
 ```
 
@@ -54,11 +60,27 @@ npm run dev
 
 This project is built with:
 
-- Vite
+- Next.js (Full-stack React framework)
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- OpenAI API (DALL-E 3 for image generation)
+
+## API Configuration
+
+The application uses OpenAI's DALL-E 3 API for image generation. To use the app:
+
+1. Get an API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Add it to your `.env` file as `OPENAI_API_KEY=your-key-here`
+3. The app will work in demo mode (showing placeholder images) if no API key is provided
+
+**API Endpoints (Next.js API routes):**
+- `POST /api/generate-image` - Generate an image from a text prompt
+- `GET /api/health` - Health check endpoint
+
+**Development:**
+The app now runs on a single port with Next.js handling both frontend and API routes. No need for separate backend server!
 
 ## How can I deploy this project?
 

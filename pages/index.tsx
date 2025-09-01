@@ -5,7 +5,6 @@ import { HistoryList, type HistoryItem } from "@/components/HistoryList";
 import { generateImage } from "@/lib/openai";
 import { toast } from "sonner";
 import { Sparkles, Palette, Wand2 } from "lucide-react";
-import heroImage from "@/assets/hero-bg.jpg";
 
 const Index = () => {
   const [currentImage, setCurrentImage] = useState<{
@@ -69,7 +68,7 @@ const Index = () => {
       {/* Hero Section */}
       <div 
         className="relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        style={{ backgroundImage: `url(/hero-bg.jpg)` }}
       >
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 container mx-auto px-4 py-20 text-center">
