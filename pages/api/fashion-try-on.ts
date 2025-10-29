@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import formidable from 'formidable';
 import fs from 'fs';
 import path from 'path';
+import { cleanupOldImages } from '../../lib/cleanup';
 
 export const config = {
   api: {
@@ -140,6 +141,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           fs.writeFileSync(filepath, buffer);
           imageUrl = `/${filename}`;
           console.log('Image saved successfully:', filename);
+          
+          // Auto cleanup old images (run in background)
+          cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
+            console.error('Auto cleanup error:', error);
+          });
+          
           break;
         } else {
           console.log('Part does not contain inlineData');

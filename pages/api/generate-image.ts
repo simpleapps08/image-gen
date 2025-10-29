@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { cleanupOldImages } from '../../lib/cleanup';
 
 const genAI = new GoogleGenAI({
   apiKey: process.env.GOOGLE_AI_API_KEY
@@ -68,6 +69,12 @@ export default async function handler(
         
         // Return the public URL
         imageUrl = `/${filename}`;
+        
+        // Auto cleanup old images (run in background)
+        cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
+          console.error('Auto cleanup error:', error);
+        });
+        
         break;
       }
     }

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { cleanupOldImages } from '../../lib/cleanup';
 
 interface ProductImageRequest {
   productDescription: string;
@@ -86,6 +87,11 @@ export default async function handler(
         const filepath = path.join(process.cwd(), 'public', filename);
         
         fs.writeFileSync(filepath, buffer);
+        
+        // Auto cleanup old images (run in background)
+        cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
+          console.error('Auto cleanup error:', error);
+        });
         
         return res.status(200).json({
           url: `/${filename}`,
