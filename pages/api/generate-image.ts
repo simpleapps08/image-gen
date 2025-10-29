@@ -97,7 +97,7 @@ export default async function handler(
     
     // Handle specific Gemini API errors with standardized responses
     if (error && typeof error === 'object' && 'status' in error) {
-      const status = (error as any).status;
+      const status = (error as { status: number }).status;
       
       if (status === 401) {
         return res.status(401).json({ 
