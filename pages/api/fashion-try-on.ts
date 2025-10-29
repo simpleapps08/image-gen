@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
 import formidable from 'formidable';
+import fs from 'node:fs';
 
 export const config = {
   api: {
