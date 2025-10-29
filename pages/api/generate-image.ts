@@ -1,8 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { cleanupOldImages } from '../../lib/cleanup';
 
 // Demo images for when API key is not configured
 const demoImages = [
@@ -62,22 +59,10 @@ export default async function handler(
     for (const part of response.candidates[0].content.parts) {
       if (part.inlineData) {
         const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
         
-        // Create a unique filename
-        const filename = `gemini-image-${Date.now()}.png`;
-        const publicPath = path.join(process.cwd(), 'public', filename);
-        
-        // Save image to public directory
-        fs.writeFileSync(publicPath, buffer);
-        
-        // Return the public URL
-        imageUrl = `/${filename}`;
-        
-        // Auto cleanup old images (run in background)
-        cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
-          console.error('Auto cleanup error:', error);
-        });
+        // Return base64 data URL instead of saving to file system
+        // This avoids EROFS errors in production environments
+        imageUrl = `data:image/png;base64,${imageData}`;
         
         break;
       }

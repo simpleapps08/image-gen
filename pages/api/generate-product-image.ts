@@ -1,8 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { cleanupOldImages } from '../../lib/cleanup';
 
 interface ProductImageRequest {
   productDescription: string;
@@ -79,22 +76,11 @@ export default async function handler(
     for (const part of response.candidates[0].content.parts) {
       if (part.inlineData) {
         const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
         
-        // Save to public directory
-        const timestamp = Date.now();
-        const filename = `product-image-${timestamp}.png`;
-        const filepath = path.join(process.cwd(), 'public', filename);
-        
-        fs.writeFileSync(filepath, buffer);
-        
-        // Auto cleanup old images (run in background)
-        cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
-          console.error('Auto cleanup error:', error);
-        });
-        
+        // Return base64 data URL instead of saving to file system
+        // This avoids EROFS errors in production environments
         return res.status(200).json({
-          url: `/${filename}`,
+          url: `data:image/png;base64,${imageData}`,
           prompt: prompt,
           demo: false
         });

@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI } from '@google/genai';
 import formidable from 'formidable';
-import fs from 'fs';
-import path from 'path';
-import { cleanupOldImages } from '../../lib/cleanup';
 
 export const config = {
   api: {
@@ -27,18 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  // Ensure tmp directory exists
-  const tmpDir = path.join(process.cwd(), 'tmp');
-  if (!fs.existsSync(tmpDir)) {
-    fs.mkdirSync(tmpDir, { recursive: true });
-  }
-
   try {
-    // Parse form data
+    // Parse form data without using temporary directory to avoid EROFS errors
     const form = formidable({
-      uploadDir: tmpDir,
       keepExtensions: true,
       maxFileSize: 10 * 1024 * 1024, // 10MB
+      // Remove uploadDir to use in-memory processing
     });
 
     const [fields, files] = await form.parse(req);
@@ -131,21 +122,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (part.inlineData) {
           console.log('Found inline data, processing image...');
           const imageData = part.inlineData.data;
-          const buffer = Buffer.from(imageData, 'base64');
           
-          // Save image - same pattern as working APIs
-          const timestamp = Date.now();
-          const filename = `fashion-tryOn-${timestamp}.png`;
-          const filepath = path.join(process.cwd(), 'public', filename);
-          
-          fs.writeFileSync(filepath, buffer);
-          imageUrl = `/${filename}`;
-          console.log('Image saved successfully:', filename);
-          
-          // Auto cleanup old images (run in background)
-          cleanupOldImages({ maxAgeHours: 24 }).catch(error => {
-            console.error('Auto cleanup error:', error);
-          });
+          // Return base64 data URL instead of saving to file system
+          // This avoids EROFS errors in production environments
+          imageUrl = `data:image/png;base64,${imageData}`;
+          console.log('Image processed successfully as base64 data URL');
           
           break;
         } else {
@@ -155,18 +136,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } else {
       console.log('No candidates or parts found in response');
       console.log('Response candidates:', response.candidates);
-    }
-
-    // Clean up temporary files
-    try {
-      if (productImageFile?.filepath && fs.existsSync(productImageFile.filepath)) {
-        fs.unlinkSync(productImageFile.filepath);
-      }
-      if (personImageFile?.filepath && fs.existsSync(personImageFile.filepath)) {
-        fs.unlinkSync(personImageFile.filepath);
-      }
-    } catch (cleanupError) {
-      console.error('Error cleaning up temp files:', cleanupError);
     }
 
     if (!imageUrl) {
@@ -189,30 +158,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error: unknown) {
     console.error('Fashion try-on error:', error);
     
-    // Clean up temp files on error
-    try {
-      const form = formidable({
-        uploadDir: tmpDir,
-        keepExtensions: true,
-        maxFileSize: 10 * 1024 * 1024, // 10MB
-      });
-
-      const [fields, files] = await form.parse(req);
-      
-      // Clean up uploaded files
-      Object.values(files).forEach(fileArray => {
-        if (Array.isArray(fileArray)) {
-          fileArray.forEach(file => {
-            if (file.filepath && fs.existsSync(file.filepath)) {
-              fs.unlinkSync(file.filepath);
-            }
-          });
-        }
-      });
-    } catch (cleanupError) {
-      console.error('Error cleaning up files:', cleanupError);
-    }
-
     const statusCode = error instanceof Error && 'status' in error && typeof (error as Error & { status: number }).status === 'number'
       ? (error as Error & { status: number }).status 
       : 500;
