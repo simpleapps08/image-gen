@@ -4,10 +4,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { cleanupOldImages } from '../../lib/cleanup';
 
-const genAI = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_AI_API_KEY
-});
-
 // Demo images for when API key is not configured
 const demoImages = [
   'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1024&h=1024&fit=crop',
@@ -37,8 +33,11 @@ export default async function handler(
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
+    // Check for API key with fallback options
+    const apiKey = process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY;
+    
     // If no API key, return demo mode response
-    if (!process.env.GOOGLE_AI_API_KEY) {
+    if (!apiKey) {
       console.log('No Google Gemini API key found, returning demo image');
       const randomImage = demoImages[Math.floor(Math.random() * demoImages.length)];
       return res.json({ 
@@ -46,6 +45,11 @@ export default async function handler(
         demo: true 
       });
     }
+
+    // Initialize GoogleGenAI with API key
+    const genAI = new GoogleGenAI({
+      apiKey: apiKey
+    });
 
     // Generate image using Google Gemini
     const response = await genAI.models.generateContent({
@@ -91,22 +95,41 @@ export default async function handler(
   } catch (error: unknown) {
     console.error('Error in generate-image API:', error);
     
-    // Handle specific Gemini API errors
+    // Handle specific Gemini API errors with standardized responses
+    if (error && typeof error === 'object' && 'status' in error) {
+      const status = (error as any).status;
+      
+      if (status === 401) {
+        return res.status(401).json({ 
+          error: 'Unauthorized - Invalid API key',
+          code: 'INVALID_API_KEY',
+          status: 401
+        });
+      }
+      
+      if (status === 400) {
+        return res.status(400).json({ 
+          error: 'Bad Request - Invalid request to Gemini API',
+          code: 'INVALID_REQUEST',
+          status: 400
+        });
+      }
+      
+      if (status === 429) {
+        return res.status(429).json({ 
+          error: 'Rate Limit Exceeded - Please try again later',
+          code: 'RATE_LIMIT_EXCEEDED',
+          status: 429
+        });
+      }
+    }
+    
+    // General error response
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
-      return res.status(400).json({ 
-        error: 'Invalid request to Gemini API. Please check your prompt.' 
-      });
-    }
-    
-    if (error && typeof error === 'object' && 'status' in error && error.status === 429) {
-      return res.status(429).json({ 
-        error: 'Rate limit exceeded. Please try again later.' 
-      });
-    }
-    
     res.status(500).json({ 
-      error: errorMessage
+      error: errorMessage,
+      code: 'INTERNAL_ERROR',
+      status: 500
     });
   }
 }

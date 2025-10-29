@@ -36,8 +36,8 @@ export default async function handler(
     return res.status(400).json({ error: 'Product description is required' });
   }
 
-  // Check for Gemini API key
-  const apiKey = process.env.GOOGLE_AI_API_KEY;
+  // Check for Gemini API key with fallback options
+  const apiKey = process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
     console.log('No Gemini API key found, using demo mode');
     return res.status(200).json({
@@ -114,14 +114,31 @@ export default async function handler(
       ? error.message 
       : 'Failed to generate product image. Please try again.';
 
+    // Standardized error responses
     if (statusCode === 400) {
-      return res.status(400).json({ error: 'Invalid request to Gemini API. Please check your prompt.' });
+      return res.status(400).json({ 
+        error: 'Bad Request - Invalid request to Gemini API',
+        code: 'INVALID_REQUEST',
+        status: 400
+      });
     } else if (statusCode === 401) {
-      return res.status(401).json({ error: 'Invalid Gemini API key.' });
+      return res.status(401).json({ 
+        error: 'Unauthorized - Invalid Gemini API key',
+        code: 'INVALID_API_KEY',
+        status: 401
+      });
     } else if (statusCode === 429) {
-      return res.status(429).json({ error: 'Rate limit exceeded. Please try again later.' });
+      return res.status(429).json({ 
+        error: 'Rate Limit Exceeded - Please try again later',
+        code: 'RATE_LIMIT_EXCEEDED',
+        status: 429
+      });
     } else {
-      return res.status(500).json({ error: message });
+      return res.status(500).json({ 
+        error: message,
+        code: 'INTERNAL_ERROR',
+        status: 500
+      });
     }
   }
 }

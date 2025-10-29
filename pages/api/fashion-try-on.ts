@@ -220,8 +220,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ? error.message 
       : 'Internal server error';
 
-    return res.status(statusCode).json({ 
-      error: message
-    });
+    // Standardized error responses
+    if (statusCode === 400) {
+      return res.status(400).json({ 
+        error: 'Bad Request - Invalid request to Gemini API',
+        code: 'INVALID_REQUEST',
+        status: 400
+      });
+    } else if (statusCode === 401) {
+      return res.status(401).json({ 
+        error: 'Unauthorized - Invalid Gemini API key',
+        code: 'INVALID_API_KEY',
+        status: 401
+      });
+    } else if (statusCode === 429) {
+      return res.status(429).json({ 
+        error: 'Rate Limit Exceeded - Please try again later',
+        code: 'RATE_LIMIT_EXCEEDED',
+        status: 429
+      });
+    } else {
+      return res.status(500).json({ 
+        error: message,
+        code: 'INTERNAL_ERROR',
+        status: 500
+      });
+    }
   }
 }
