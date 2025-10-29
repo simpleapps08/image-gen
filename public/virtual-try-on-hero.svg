@@ -1,0 +1,85 @@
+<svg width="1024" height="800" viewBox="0 0 1024 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E6D7FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#D4B5FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C19AFF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="figureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A86CFB;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1024" height="800" fill="url(#bgGradient)"/>
+  
+  <!-- Floating Elements -->
+  <circle cx="100" cy="150" r="20" fill="#FFFFFF" opacity="0.3"/>
+  <circle cx="900" cy="100" r="15" fill="#FFFFFF" opacity="0.4"/>
+  <circle cx="150" cy="600" r="25" fill="#FFFFFF" opacity="0.2"/>
+  <circle cx="850" cy="650" r="18" fill="#FFFFFF" opacity="0.35"/>
+  
+  <!-- Main Glass Interface -->
+  <rect x="300" y="150" width="500" height="400" rx="20" fill="url(#glassGradient)" stroke="#FFFFFF" stroke-width="2" opacity="0.8"/>
+  
+  <!-- Virtual Try-On Text -->
+  <rect x="320" y="320" width="120" height="60" rx="8" fill="#FFFFFF" opacity="0.9"/>
+  <text x="380" y="340" text-anchor="middle" fill="#8B5CF6" font-family="Arial, sans-serif" font-size="12" font-weight="bold">VIRTUAL</text>
+  <text x="380" y="355" text-anchor="middle" fill="#8B5CF6" font-family="Arial, sans-serif" font-size="12" font-weight="bold">TRY-ON</text>
+  
+  <!-- 3D Figure -->
+  <ellipse cx="550" cy="520" rx="40" ry="8" fill="#A86CFB" opacity="0.3"/>
+  <rect x="530" y="350" width="40" height="170" rx="20" fill="url(#figureGradient)"/>
+  <circle cx="550" cy="340" r="20" fill="url(#figureGradient)"/>
+  <ellipse cx="550" cy="325" rx="25" ry="5" fill="#FFFFFF" opacity="0.3"/>
+  
+  <!-- Clothing Items -->
+  <rect x="460" y="200" width="40" height="60" rx="5" fill="#FFFFFF" opacity="0.7"/>
+  <rect x="460" y="280" width="40" height="60" rx="5" fill="#FFFFFF" opacity="0.7"/>
+  <rect x="640" y="200" width="40" height="60" rx="5" fill="#FFFFFF" opacity="0.7"/>
+  <rect x="640" y="280" width="40" height="60" rx="5" fill="#FFFFFF" opacity="0.7"/>
+  
+  <!-- Accessories -->
+  <ellipse cx="640" cy="380" rx="25" ry="8" fill="#8B5CF6" opacity="0.6"/>
+  <ellipse cx="640" cy="420" rx="25" ry="12" fill="#8B5CF6" opacity="0.6"/>
+  <rect x="620" y="350" width="40" height="15" rx="7" fill="#8B5CF6" opacity="0.7"/>
+  
+  <!-- Interface Elements -->
+  <rect x="320" y="180" width="60" height="8" rx="4" fill="#FFFFFF" opacity="0.6"/>
+  <rect x="320" y="195" width="40" height="8" rx="4" fill="#FFFFFF" opacity="0.4"/>
+  
+  <!-- Control Panels -->
+  <rect x="320" y="400" width="15" height="15" rx="3" fill="#A86CFB" opacity="0.8"/>
+  <rect x="320" y="420" width="30" height="8" rx="4" fill="#FFFFFF" opacity="0.5"/>
+  <rect x="320" y="435" width="25" height="8" rx="4" fill="#FFFFFF" opacity="0.5"/>
+  
+  <!-- Window Controls -->
+  <circle cx="760" cy="170" r="4" fill="#FF6B6B" opacity="0.7"/>
+  <circle cx="775" cy="170" r="4" fill="#FFD93D" opacity="0.7"/>
+  <circle cx="790" cy="170" r="4" fill="#6BCF7F" opacity="0.7"/>
+  
+  <!-- Sparkle Effects -->
+  <g transform="translate(200,300)">
+    <path d="M0,-8 L2,0 L0,8 L-2,0 Z" fill="#FFFFFF" opacity="0.8"/>
+    <path d="M-8,0 L0,2 L8,0 L0,-2 Z" fill="#FFFFFF" opacity="0.8"/>
+  </g>
+  
+  <g transform="translate(750,450)">
+    <path d="M0,-6 L1.5,0 L0,6 L-1.5,0 Z" fill="#FFFFFF" opacity="0.6"/>
+    <path d="M-6,0 L0,1.5 L6,0 L0,-1.5 Z" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+  
+  <g transform="translate(850,250)">
+    <path d="M0,-10 L2.5,0 L0,10 L-2.5,0 Z" fill="#FFFFFF" opacity="0.9"/>
+    <path d="M-10,0 L0,2.5 L10,0 L0,-2.5 Z" fill="#FFFFFF" opacity="0.9"/>
+  </g>
+  
+  <!-- Crescent Moon -->
+  <path d="M900,680 Q920,660 900,640 Q890,650 890,670 Q890,680 900,680 Z" fill="#FFFFFF" opacity="0.4"/>
+</svg>

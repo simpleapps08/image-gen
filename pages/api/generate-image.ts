@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { OpenAI } from 'openai';
+import { GoogleGenAI } from '@google/genai';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+const genAI = new GoogleGenAI({
+  apiKey: process.env.GOOGLE_AI_API_KEY
 });
 
 // Demo images for when API key is not configured
@@ -16,9 +18,6 @@ const demoImages = [
 
 interface GenerateImageRequest {
   prompt: string;
-  size?: "1024x1024" | "1024x1792" | "1792x1024";
-  quality?: "standard" | "hd";
-  style?: "vivid" | "natural";
 }
 
 export default async function handler(
@@ -30,7 +29,7 @@ export default async function handler(
   }
 
   try {
-    const { prompt, size = '1024x1024', quality = 'standard', style = 'vivid' }: GenerateImageRequest = req.body;
+    const { prompt }: GenerateImageRequest = req.body;
 
     // Validate input
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
@@ -38,8 +37,8 @@ export default async function handler(
     }
 
     // If no API key, return demo mode response
-    if (!process.env.OPENAI_API_KEY) {
-      console.log('No OpenAI API key found, returning demo image');
+    if (!process.env.GOOGLE_AI_API_KEY) {
+      console.log('No Google Gemini API key found, returning demo image');
       const randomImage = demoImages[Math.floor(Math.random() * demoImages.length)];
       return res.json({ 
         url: randomImage, 
@@ -47,45 +46,60 @@ export default async function handler(
       });
     }
 
-    // Generate image using OpenAI DALL-E 3
-    const response = await openai.images.generate({
-      model: 'dall-e-3',
-      prompt: prompt.trim(),
-      n: 1,
-      size: size,
-      quality: quality,
-      style: style,
+    // Generate image using Google Gemini
+    const response = await genAI.models.generateContent({
+      model: "gemini-2.5-flash-image",
+      contents: prompt.trim(),
     });
 
-    if (!response.data || !response.data[0] || !response.data[0].url) {
-      throw new Error('Invalid response from OpenAI API');
+    // Process the response to extract image data
+    let imageUrl = null;
+    for (const part of response.candidates[0].content.parts) {
+      if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        const buffer = Buffer.from(imageData, "base64");
+        
+        // Create a unique filename
+        const filename = `gemini-image-${Date.now()}.png`;
+        const publicPath = path.join(process.cwd(), 'public', filename);
+        
+        // Save image to public directory
+        fs.writeFileSync(publicPath, buffer);
+        
+        // Return the public URL
+        imageUrl = `/${filename}`;
+        break;
+      }
+    }
+
+    if (!imageUrl) {
+      throw new Error('No image data received from Gemini API');
     }
 
     res.json({ 
-      url: response.data[0].url,
+      url: imageUrl,
       demo: false 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in generate-image API:', error);
     
-    // Handle specific OpenAI errors
-    if (error.status === 400) {
+    // Handle specific Gemini API errors
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
       return res.status(400).json({ 
-        error: 'Invalid request to OpenAI API. Please check your prompt.' 
+        error: 'Invalid request to Gemini API. Please check your prompt.' 
       });
-    } else if (error.status === 401) {
-      return res.status(401).json({ 
-        error: 'Invalid OpenAI API key.' 
-      });
-    } else if (error.status === 429) {
+    }
+    
+    if (error && typeof error === 'object' && 'status' in error && error.status === 429) {
       return res.status(429).json({ 
         error: 'Rate limit exceeded. Please try again later.' 
       });
     }
     
     res.status(500).json({ 
-      error: 'Failed to generate image. Please try again.' 
+      error: errorMessage
     });
   }
 }

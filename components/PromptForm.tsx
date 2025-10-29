@@ -31,11 +31,11 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
   };
 
   const suggestions = [
-    "A majestic dragon soaring through cosmic clouds",
-    "A futuristic cyberpunk city at sunset",
-    "A peaceful forest with magical glowing mushrooms",
-    "An astronaut floating in a galaxy of stars",
-    "A steampunk airship above Victorian London"
+    "Seekor naga megah yang terbang melalui awan kosmik",
+    "Kota cyberpunk futuristik saat matahari terbenam",
+    "Hutan damai dengan jamur bercahaya magis",
+    "Seorang astronot mengambang di galaksi bintang-bintang",
+    "Kapal udara steampunk di atas London Victoria"
   ];
 
   return (
@@ -44,7 +44,7 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
         <div className="space-y-3">
           <label htmlFor="prompt" className="text-lg font-semibold text-foreground flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-primary" />
-            What do you want to imagine today?
+            Apa yang ingin Anda bayangkan hari ini?
           </label>
           
           <Input
@@ -52,7 +52,7 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Describe your vision in detail..."
+            placeholder="Jelaskan visi Anda secara detail..."
             className="text-lg py-4 bg-background/80 border-2 border-ai-surface-hover focus:border-primary transition-all duration-300"
             disabled={isLoading}
           />
@@ -122,12 +122,12 @@ export function PromptForm({ onSubmit, isLoading }: PromptFormProps) {
           {isLoading ? (
             <>
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-              Creating your image...
+              Membuat gambar Anda...
             </>
           ) : (
             <>
               <Wand2 className="w-5 h-5 mr-2" />
-              Generate Image
+              Buat Gambar
             </>
           )}
         </Button>

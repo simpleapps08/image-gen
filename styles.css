@@ -6,47 +6,52 @@
 
 @layer base {
   :root {
-    /* Core colors - Modern indigo/purple theme */
-    --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
+    /* Core colors - AI Modern Design System */
+    /* Background: Soft Gray (#F4F5F7) untuk ruang visual luas */
+    --background: 220 14% 96%;
+    /* Text Primary: Graphite (#2D2D2D) untuk kontras tinggi */
+    --foreground: 0 0% 18%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    --card: 220 14% 96%;
+    --card-foreground: 0 0% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
+    --popover-foreground: 0 0% 18%;
 
-    /* Primary - Deep indigo for main actions */
-    --primary: 239 84% 67%;
+    /* Primary: Neo Blue (#4A90E2) - Tombol utama, CTA, ikon aktif */
+    --primary: 210 73% 57%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 239 84% 77%;
+    --primary-hover: 210 73% 67%;
 
-    /* Secondary - Soft purple accent */
-    --secondary: 270 40% 96%;
-    --secondary-foreground: 239 40% 20%;
+    /* Secondary: Dark Navy (#1E1F26) - Navigasi atas, footer */
+    --secondary: 225 20% 13%;
+    --secondary-foreground: 0 0% 100%;
 
+    /* Muted: Soft Gray untuk latar konten dan area kosong */
     --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    /* Text Secondary: Cool Gray (#6D6E71) - Subteks, placeholder */
+    --muted-foreground: 210 2% 43%;
 
-    --accent: 270 100% 98%;
-    --accent-foreground: 239 84% 67%;
+    /* Accent: Electric Purple (#A86CFB) - Efek hover, link aktif, highlight */
+    --accent: 270 91% 70%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 239 84% 67%;
+    --ring: 210 73% 57%;
 
     --radius: 0.75rem;
 
-    /* Custom AI theme colors */
-    --ai-gradient-start: 239 84% 67%;
-    --ai-gradient-end: 270 100% 80%;
-    --ai-surface: 270 40% 98%;
-    --ai-surface-hover: 270 50% 96%;
-    --ai-text-light: 220 9% 65%;
-    --ai-shadow: 239 30% 67%;
+    /* Custom AI theme colors - Futuristic Accents */
+    --ai-gradient-start: 210 73% 57%; /* Neo Blue */
+    --ai-gradient-end: 270 91% 70%; /* Electric Purple */
+    --ai-surface: 220 14% 96%; /* Soft Gray */
+    --ai-surface-hover: 220 14% 92%;
+    --ai-text-light: 210 2% 43%; /* Cool Gray */
+    --ai-shadow: 210 73% 57%;
 
     /* Animation variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -70,34 +75,47 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Mode: Premium dengan kombinasi #0F0F10 dan aksen #00C1D4 */
+    --background: 240 10% 4%; /* #0F0F10 - Background gelap premium */
+    --foreground: 0 0% 98%; /* Text putih untuk kontras tinggi */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 240 10% 4%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 240 10% 4%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary tetap Neo Blue untuk konsistensi */
+    --primary: 210 73% 57%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary: Dark Navy yang lebih gelap untuk dark mode */
+    --secondary: 225 20% 8%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 240 10% 8%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent: Cyan aksen (#00C1D4) untuk dark mode premium */
+    --accent: 187 100% 42%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
+    --border: 240 10% 15%;
+    --input: 240 10% 15%;
+    --ring: 187 100% 42%; /* Cyan ring untuk dark mode */
+
+    /* Custom AI theme colors untuk dark mode */
+    --ai-gradient-start: 187 100% 42%; /* Cyan aksen */
+    --ai-gradient-end: 270 91% 70%; /* Electric Purple tetap */
+    --ai-surface: 240 10% 8%;
+    --ai-surface-hover: 240 10% 12%;
+    --ai-text-light: 215 20% 65%;
+    --ai-shadow: 187 100% 42%; /* Cyan shadow untuk efek glow */
+
+    --sidebar-background: 240 10% 4%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
